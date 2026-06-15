@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="card">
+    <h1>{{ username }}'s Profile</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h2>{{ total_attempts }}</h2>
+            <p>Total Attempts</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ highest_score }}</h2>
+            <p>Highest Score</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ average_score }}</h2>
+            <p>Average Score</p>
+        </div>
+    </div>
+
+    <h2>Achievements</h2>
+
+    <div class="badge-grid">
+        {% if badges %}
+            {% for badge in badges %}
+                <div class="badge-card">{{ badge }}</div>
+            {% endfor %}
+        {% else %}
+            <p>No badges earned yet.</p>
+        {% endif %}
+    </div>
+
+    <h2>Category Performance</h2>
+    <canvas id="categoryChart"></canvas>
+
+    <h2>Score Graph</h2>
+    <canvas id="scoreChart"></canvas>
+
+    <h2>Score History</h2>
+
+    <table>
+        <tr>
+            <th>Category</th>
+            <th>Score</th>
+        </tr>
+
+        {% for item in history %}
+        <tr>
+            <td>{{ item[0] }}</td>
+            <td>{{ item[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+
+    <a href="/dashboard"><button>Dashboard</button></a>
+    <a href="/logout"><button>Logout</button></a>
+</div>
+
+<script>
+const labels = [
+    {% for item in history %}
+        "Attempt {{ loop.index }}",
+    {% endfor %}
+];
+
+const scores = [
+    {% for item in history %}
+        {{ item[1] }},
+    {% endfor %}
+];
+
+new Chart(document.getElementById('scoreChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Score History',
+            data: scores,
+            borderWidth: 3,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+new Chart(document.getElementById('categoryChart'), {
+    type: 'bar',
+    data: {
+        labels: ['HTML', 'CSS', 'JavaScript', 'Python'],
+        datasets: [{
+            label: 'Category Performance',
+            data: [
+                {{ category_stats['HTML'] }},
+                {{ category_stats['CSS'] }},
+                {{ category_stats['JavaScript'] }},
+                {{ category_stats['Python'] }}
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="card">
+    <h1>Quiz Result</h1>
+
+    <h2>{{ username }}</h2>
+    <p>Category: {{ category }}</p>
+
+    <div class="result-box">
+        <p><strong>Score:</strong> {{ score }} / {{ total }}</p>
+        <p><strong>Accuracy:</strong> {{ accuracy }}%</p>
+        <p><strong>Performance:</strong> {{ performance }}</p>
+        <h2>{{ stars }}</h2>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar" style="width: {{ accuracy }}%;">
+            {{ accuracy }}%
+        </div>
+    </div>
+
+    <br>
+
+    <a href="/dashboard"><button>Dashboard</button></a>
+    <a href="/leaderboard"><button>Leaderboard</button></a>
+    <a href="/certificate/{{ username }}/{{ category }}/{{ score }}/{{ total }}">
+    <button>Download Certificate</button>
+</a>
+</div>
+
+</body>
+</html>

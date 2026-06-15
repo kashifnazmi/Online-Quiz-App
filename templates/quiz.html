@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category }} Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="card">
+    <h1>{{ category }} Quiz</h1>
+
+    <h2 id="timer">Time Left: 60s</h2>
+
+    <div class="progress-info">
+        <p>Question Progress</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="quizProgress" style="width: 0%;">0%</div>
+        </div>
+    </div>
+
+    <form method="POST" action="/submit_quiz/{{ category }}" id="quizForm">
+
+        {% for q in questions %}
+        <input type="hidden" name="question_ids" value="{{ q[0] }}">
+
+        <div class="quiz-box">
+            <h3>{{ loop.index }}. {{ q[2] }}</h3>
+
+            <label><input type="radio" name="{{ q[0] }}" value="{{ q[3] }}" required onchange="updateProgress()"> {{ q[3] }}</label>
+            <label><input type="radio" name="{{ q[0] }}" value="{{ q[4] }}" onchange="updateProgress()"> {{ q[4] }}</label>
+            <label><input type="radio" name="{{ q[0] }}" value="{{ q[5] }}" onchange="updateProgress()"> {{ q[5] }}</label>
+            <label><input type="radio" name="{{ q[0] }}" value="{{ q[6] }}" onchange="updateProgress()"> {{ q[6] }}</label>
+        </div>
+        {% endfor %}
+
+        <button type="submit">Submit Quiz</button>
+    </form>
+</div>
+
+<script>
+let timeLeft = 60;
+let timer = document.getElementById("timer");
+let quizForm = document.getElementById("quizForm");
+
+let countdown = setInterval(function () {
+    timeLeft--;
+    timer.innerHTML = "Time Left: " + timeLeft + "s";
+
+    if (timeLeft <= 10) {
+        timer.style.color = "red";
+    }
+
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        alert("Time Over! Quiz submitted automatically.");
+        quizForm.submit();
+    }
+}, 1000);
+
+function updateProgress() {
+    let totalQuestions = document.querySelectorAll(".quiz-box").length;
+    let answered = 0;
+
+    document.querySelectorAll(".quiz-box").forEach(function(box) {
+        let checked = box.querySelector("input[type='radio']:checked");
+        if (checked) {
+            answered++;
+        }
+    });
+
+    let percent = Math.round((answered / totalQuestions) * 100);
+    let progressBar = document.getElementById("quizProgress");
+
+    progressBar.style.width = percent + "%";
+    progressBar.innerHTML = percent + "%";
+}
+</script>
+
+</body>
+</html>

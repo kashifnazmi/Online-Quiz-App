@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="card">
+    <h1>Welcome {{ username }}</h1>
+    <p>Select Quiz Category</p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h2>{{ total_users }}</h2>
+            <p>Total Users</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_questions }}</h2>
+            <p>Total Questions</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_attempts }}</h2>
+            <p>Total Attempts</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ highest_score }}</h2>
+            <p>Highest Score</p>
+        </div>
+    </div>
+
+    <br>
+
+    {% for category in categories %}
+        <a href="/quiz/{{ category }}">
+            <button>{{ category }} Quiz</button>
+        </a>
+    {% endfor %}
+
+    <br><br>
+
+    {% if username == "admin" %}
+        <a href="/admin"><button>Admin Panel</button></a>
+    {% endif %}
+
+    <a href="/leaderboard"><button>Leaderboard</button></a>
+    <a href="/logout"><button>Logout</button></a>
+    <a href="/profile"><button>My Profile</button></a>
+</div>
+
+</body>
+</html>
